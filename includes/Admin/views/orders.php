@@ -31,17 +31,10 @@
             <label for="wfe-customer"><?php esc_html_e('Customer keyword', 'woo-fulfillment-export'); ?></label>
             <input id="wfe-customer" type="search" name="customer" value="<?php echo esc_attr($filters['customer']); ?>">
         </div>
-        <div class="wfe-field">
+        <div class="wfe-field wfe-field-large">
             <label for="wfe-order-query"><?php esc_html_e('Order ID / Number', 'woo-fulfillment-export'); ?></label>
-            <input id="wfe-order-query" type="search" name="order_query" value="<?php echo esc_attr($filters['order_query']); ?>" placeholder="#263950">
-        </div>
-        <div class="wfe-field">
-            <label for="wfe-product"><?php esc_html_e('Product name or ID', 'woo-fulfillment-export'); ?></label>
-            <input id="wfe-product" type="search" name="product" value="<?php echo esc_attr($filters['product']); ?>">
-        </div>
-        <div class="wfe-field">
-            <label for="wfe-sku"><?php esc_html_e('SKU', 'woo-fulfillment-export'); ?></label>
-            <input id="wfe-sku" type="search" name="sku" value="<?php echo esc_attr($filters['sku']); ?>">
+            <input id="wfe-order-query" type="search" name="order_query" value="<?php echo esc_attr($filters['order_query']); ?>" placeholder="#263950, #263951, 263952">
+            <span class="wfe-field-help"><?php esc_html_e('Search multiple orders with comma, space, or new line separated IDs/numbers.', 'woo-fulfillment-export'); ?></span>
         </div>
         <div class="wfe-field">
             <label for="wfe-category"><?php esc_html_e('Product category', 'woo-fulfillment-export'); ?></label>
@@ -85,8 +78,6 @@
         <input type="hidden" name="date_to" value="<?php echo esc_attr($filters['date_to']); ?>">
         <input type="hidden" name="order_query" value="<?php echo esc_attr($filters['order_query']); ?>">
         <input type="hidden" name="customer" value="<?php echo esc_attr($filters['customer']); ?>">
-        <input type="hidden" name="product" value="<?php echo esc_attr($filters['product']); ?>">
-        <input type="hidden" name="sku" value="<?php echo esc_attr($filters['sku']); ?>">
         <input type="hidden" name="category" value="<?php echo esc_attr($filters['category']); ?>">
         <input type="hidden" name="per_page" value="<?php echo esc_attr($filters['limit']); ?>">
 
