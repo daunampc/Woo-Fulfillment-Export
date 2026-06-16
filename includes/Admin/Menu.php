@@ -50,16 +50,51 @@ final class WFE_Admin_Menu
             'limit' => $per_page,
             'page' => $page,
         ];
-        $result = $query->get_orders([
-            'status' => $filters['status'],
-            'date_from' => $filters['date_from'],
-            'date_to' => $filters['date_to'],
-            'order_query' => $filters['order_query'],
-            'customer' => $filters['customer'],
-            'category' => $filters['category'],
-            'limit' => $filters['limit'],
-            'page' => $filters['page'],
-        ]);
+
+        $order_tokens = self::order_lookup_tokens($filters['order_query']);
+        if (count($order_tokens) > 1) {
+            $matched_orders = [];
+            foreach ($order_tokens as $token) {
+                $numeric = ltrim($token, '#');
+                if ($numeric === '' || !ctype_digit($numeric)) {
+                    continue;
+                }
+                $order = wc_get_order((int) $numeric);
+                if (!$order instanceof WC_Order) {
+                    continue;
+                }
+
+                $filter_without_order_query = $filters;
+                $filter_without_order_query['order_query'] = '';
+                if (
+                    WFE_Product_Helper::order_matches_status_date($order, $filter_without_order_query)
+                    && WFE_Product_Helper::order_matches_filters($order, $filter_without_order_query)
+                ) {
+                    $matched_orders[$order->get_id()] = $order;
+                }
+            }
+
+            $matched_orders = array_values($matched_orders);
+            $total = count($matched_orders);
+            $offset = ($page - 1) * $per_page;
+            $result = (object) [
+                'orders' => array_slice($matched_orders, $offset, $per_page),
+                'total' => $total,
+                'max_num_pages' => max(1, (int) ceil($total / $per_page)),
+                'truncated' => false,
+            ];
+        } else {
+            $result = $query->get_orders([
+                'status' => $filters['status'],
+                'date_from' => $filters['date_from'],
+                'date_to' => $filters['date_to'],
+                'order_query' => $filters['order_query'],
+                'customer' => $filters['customer'],
+                'category' => $filters['category'],
+                'limit' => $filters['limit'],
+                'page' => $filters['page'],
+            ]);
+        }
 
         $templates = (new WFE_Template_Repository())->all();
         $categories = get_terms([
@@ -68,6 +103,22 @@ final class WFE_Admin_Menu
         ]);
         $categories = is_wp_error($categories) ? [] : $categories;
         include WFE_PATH . 'includes/Admin/views/orders.php';
+    }
+
+    private static function order_lookup_tokens(string $query): array
+    {
+        $query = str_replace(["\r", "\n", ';', '|'], ',', $query);
+        $parts = preg_split('/[\s,]+/', $query) ?: [];
+        $tokens = [];
+
+        foreach ($parts as $part) {
+            $part = trim((string) $part);
+            if ($part !== '') {
+                $tokens[] = $part;
+            }
+        }
+
+        return array_values(array_unique($tokens));
     }
 
     public static function templates_page(): void
