@@ -33,6 +33,12 @@
     return payload;
   }
 
+  function decodeExportUrl(url) {
+    const textarea = document.createElement('textarea');
+    textarea.innerHTML = String(url || '');
+    return textarea.value;
+  }
+
   function post(action, data) {
     const body = new FormData();
     body.append('action', action);
@@ -99,7 +105,7 @@
 
     const actionInput = document.getElementById('wfe-form-action');
     const targetStatusInput = document.getElementById('wfe-target-status');
-    const exportButton = form.querySelector('.wfe-export-button');
+    const exportButton = form.querySelector('.wfe-export-button') || form.querySelector('button[type="submit"], .button-primary');
     const progress = document.getElementById('wfe-export-progress');
     const bar = progress ? progress.querySelector('.wfe-progress-bar span') : null;
     const text = progress ? progress.querySelector('.wfe-progress-text') : null;
@@ -147,6 +153,7 @@
         exportButton.classList.add('is-busy');
         const exportLabel = exportButton.querySelector('span:last-child');
         if (exportLabel) exportLabel.textContent = WFE_EXPORT.processingText;
+        if (!exportLabel) exportButton.textContent = WFE_EXPORT.processingText;
       }
       setProgress(2, WFE_EXPORT.startingText);
 
@@ -174,7 +181,7 @@
       }).then(function (finish) {
         setProgress(100, WFE_EXPORT.doneText);
         if (finish.download_url) {
-          window.location.href = finish.download_url;
+          window.location.href = decodeExportUrl(finish.download_url);
         }
       }).catch(function (error) {
         setProgress(0, error.message || WFE_EXPORT.errorText);
@@ -185,6 +192,7 @@
           exportButton.classList.remove('is-busy');
           const label = exportButton.querySelector('span:last-child');
           if (label) label.textContent = 'Export orders';
+          if (!label) exportButton.textContent = exportButton.dataset.originalText || 'Export selected or filtered orders';
         }
       });
     });
