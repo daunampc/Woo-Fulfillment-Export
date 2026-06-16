@@ -11,8 +11,11 @@ Plugin WordPress/WooCommerce để xuất order fulfillment theo template CSV ho
 - Mapping theo cột, đọc header dòng đầu của CSV và đọc sheet/header row của XLSX nếu `ZipArchive` khả dụng.
 - Preview mapping bằng một order mẫu.
 - Export theo order được chọn hoặc export trực tiếp theo status/filter.
+- Export toolbar có icon, select template đẹp hơn và action nhanh cho đơn đã chọn.
+- Bulk action cho order đã chọn: Mark Fulfillment hoặc Back to Processing.
 - Filter theo status, ngày, Order ID/Number, customer keyword, product name/ID, SKU và product category.
 - Dynamic API mapping qua API Connections, ví dụ `{api:vtn_tasksave_url:{product_sku}}`.
+- Khi export xong, order tự chuyển sang trạng thái Fulfillment.
 - Hai chế độ dòng: mỗi order item là một dòng hoặc mỗi order là một dòng.
 - Dùng WooCommerce CRUD (`wc_get_orders`, `wc_get_order`, order item APIs), không query trực tiếp bảng order, phù hợp hơn với HPOS.
 - Lấy SKU variation trước, fallback về parent SKU.
@@ -105,6 +108,16 @@ Nếu placeholder không có dữ liệu, plugin trả về chuỗi rỗng.
 - **SKU**: nhập một phần SKU để match simple product SKU, variation SKU, hoặc parent product SKU nếu variation không có SKU. Search không phân biệt hoa thường.
 - **Order ID / Number**: nhập `263950`, `#263950`, hoặc một phần order number nếu shop dùng custom order number.
 - Các filter Order ID/Number, SKU, status, date range, customer, product và category có thể kết hợp với nhau.
+
+
+## Bulk status actions
+
+Trong trang **Orders**, chọn nhiều order bằng checkbox rồi dùng nhóm **Bulk status**:
+
+- **Mark Fulfillment**: chuyển các order đã chọn sang Fulfillment.
+- **Back to Processing**: chuyển các order đã chọn về Processing.
+
+Nhóm action này dùng chung nonce/quyền `manage_woocommerce` và không ảnh hưởng đến export AJAX.
 
 ## API Connections
 

@@ -76,7 +76,8 @@
 
     <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="wfe-panel" id="wfe-export-form">
         <?php wp_nonce_field('wfe_export_orders'); ?>
-        <input type="hidden" name="action" value="wfe_export_orders">
+        <input type="hidden" name="action" value="wfe_export_orders" id="wfe-form-action">
+        <input type="hidden" name="target_status" value="" id="wfe-target-status">
         <?php foreach ($status as $selected_status): ?>
             <input type="hidden" name="status[]" value="<?php echo esc_attr($selected_status); ?>">
         <?php endforeach; ?>
@@ -89,17 +90,37 @@
         <input type="hidden" name="category" value="<?php echo esc_attr($filters['category']); ?>">
         <input type="hidden" name="per_page" value="<?php echo esc_attr($filters['limit']); ?>">
 
-        <div class="wfe-toolbar">
-            <select name="template_id" required>
-                <option value=""><?php esc_html_e('Select CSV/XLSX template', 'woo-fulfillment-export'); ?></option>
-                <?php foreach ($templates as $template): ?>
-                    <option value="<?php echo esc_attr($template['id']); ?>">
-                        <?php echo esc_html($template['name'] . ' (' . strtoupper($template['file_type']) . ')'); ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-            <button class="button button-primary"><?php esc_html_e('Export selected or filtered orders', 'woo-fulfillment-export'); ?></button>
-            <span class="wfe-selected-count" id="wfe-selected-count" aria-live="polite"><?php esc_html_e('0 selected', 'woo-fulfillment-export'); ?></span>
+        <div class="wfe-export-toolbar">
+            <div class="wfe-export-main">
+                <label class="wfe-template-select-wrap">
+                    <span class="dashicons dashicons-media-spreadsheet" aria-hidden="true"></span>
+                    <span class="screen-reader-text"><?php esc_html_e('Template', 'woo-fulfillment-export'); ?></span>
+                    <select name="template_id" class="wfe-template-select" required>
+                        <option value=""><?php esc_html_e('Select CSV/XLSX template', 'woo-fulfillment-export'); ?></option>
+                        <?php foreach ($templates as $template): ?>
+                            <option value="<?php echo esc_attr($template['id']); ?>">
+                                <?php echo esc_html($template['name'] . ' (' . strtoupper($template['file_type']) . ')'); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </label>
+                <button type="submit" class="button button-primary wfe-export-button">
+                    <span class="dashicons dashicons-download" aria-hidden="true"></span>
+                    <span><?php esc_html_e('Export orders', 'woo-fulfillment-export'); ?></span>
+                </button>
+                <span class="wfe-selected-count" id="wfe-selected-count" aria-live="polite"><?php esc_html_e('0 selected', 'woo-fulfillment-export'); ?></span>
+            </div>
+            <div class="wfe-bulk-status-actions" aria-label="<?php echo esc_attr__('Bulk order status actions', 'woo-fulfillment-export'); ?>">
+                <span class="wfe-bulk-label"><?php esc_html_e('Bulk status', 'woo-fulfillment-export'); ?></span>
+                <button type="submit" name="action" value="wfe_bulk_update_orders" class="button wfe-bulk-status-button wfe-bulk-fulfillment" data-target-status="fulfillment" formnovalidate>
+                    <span class="dashicons dashicons-yes-alt" aria-hidden="true"></span>
+                    <span><?php esc_html_e('Mark Fulfillment', 'woo-fulfillment-export'); ?></span>
+                </button>
+                <button type="submit" name="action" value="wfe_bulk_update_orders" class="button wfe-bulk-status-button wfe-bulk-processing" data-target-status="processing" formnovalidate>
+                    <span class="dashicons dashicons-undo" aria-hidden="true"></span>
+                    <span><?php esc_html_e('Back to Processing', 'woo-fulfillment-export'); ?></span>
+                </button>
+            </div>
         </div>
         <div class="wfe-export-progress" id="wfe-export-progress" hidden>
             <div class="wfe-progress-bar"><span style="width:0%"></span></div>
@@ -183,31 +204,3 @@
         </div>
     <?php endif; ?>
 </div>
-
-<script>
-(function() {
-    const selectAll = document.getElementById('wfe-select-all-orders');
-    const count = document.getElementById('wfe-selected-count');
-    const checks = Array.from(document.querySelectorAll('.wfe-order-check'));
-    function updateCount() {
-        const selected = checks.filter(function(check) { return check.checked; }).length;
-        if (count) {
-            count.textContent = selected + ' selected';
-        }
-        if (selectAll) {
-            selectAll.checked = checks.length > 0 && selected === checks.length;
-            selectAll.indeterminate = selected > 0 && selected < checks.length;
-        }
-    }
-    if (selectAll) {
-        selectAll.addEventListener('change', function() {
-            checks.forEach(function(check) { check.checked = selectAll.checked; });
-            updateCount();
-        });
-    }
-    checks.forEach(function(check) {
-        check.addEventListener('change', updateCount);
-    });
-    updateCount();
-})();
-</script>

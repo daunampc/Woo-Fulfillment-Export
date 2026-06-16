@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Woo Fulfillment Export
  * Description: Export WooCommerce fulfillment orders to CSV/XLSX templates with flexible mappings, filters, variable products, and WCPA order meta.
- * Version: 1.3.1
+ * Version: 1.3.2
  * Author: Admin
  * Requires Plugins: woocommerce
  * Text Domain: woo-fulfillment-export
@@ -10,7 +10,7 @@
 
 defined('ABSPATH') || exit;
 
-define('WFE_VERSION', '1.3.1');
+define('WFE_VERSION', '1.3.2');
 define('WFE_FILE', __FILE__);
 define('WFE_PATH', plugin_dir_path(__FILE__));
 define('WFE_URL', plugin_dir_url(__FILE__));
@@ -65,6 +65,7 @@ final class WFE_Plugin
         add_action('wp_ajax_wfe_process_export', [$this, 'ajax_process_export']);
         add_action('wp_ajax_wfe_finish_export', [$this, 'ajax_finish_export']);
         add_action('admin_post_wfe_mark_order_fulfillment', [$this, 'handle_mark_order_fulfillment']);
+        add_action('admin_post_wfe_bulk_update_orders', [$this, 'handle_bulk_update_orders']);
         add_action('admin_post_wfe_save_settings', [$this, 'handle_save_settings']);
         add_action('admin_post_wfe_save_api_connection', [$this, 'handle_save_api_connection']);
         add_action('admin_post_wfe_delete_api_connection', [$this, 'handle_delete_api_connection']);
@@ -120,6 +121,7 @@ final class WFE_Plugin
             'startingText' => __('Preparing export...', 'woo-fulfillment-export'),
             'doneText' => __('Export ready. Downloading...', 'woo-fulfillment-export'),
             'errorText' => __('Export failed. Please try again.', 'woo-fulfillment-export'),
+            'bulkNoSelectionText' => __('Please select at least one order first.', 'woo-fulfillment-export'),
         ]);
     }
 
@@ -553,6 +555,49 @@ final class WFE_Plugin
             $redirect = admin_url('admin.php?page=wfe-orders');
         }
         $redirect = add_query_arg('wfe_success', $target_status === 'fulfillment' ? 'marked_fulfillment' : 'marked_processing', $redirect);
+        wp_safe_redirect($redirect);
+        exit;
+    }
+
+    public function handle_bulk_update_orders(): void
+    {
+        $this->assert_access('wfe_export_orders');
+
+        $order_ids = array_map('absint', $_POST['order_ids'] ?? []);
+        $order_ids = array_values(array_filter(array_unique($order_ids)));
+        $target_status = sanitize_key(wp_unslash($_POST['target_status'] ?? 'fulfillment'));
+        if (!in_array($target_status, ['fulfillment', 'processing'], true)) {
+            $target_status = 'fulfillment';
+        }
+
+        if (!$order_ids) {
+            $redirect = wp_get_referer() ?: admin_url('admin.php?page=wfe-orders');
+            wp_safe_redirect(add_query_arg('wfe_error', 'no_orders_selected', $redirect));
+            exit;
+        }
+
+        $note = $target_status === 'fulfillment'
+            ? __('Bulk marked as Fulfillment from Fulfillment Export.', 'woo-fulfillment-export')
+            : __('Bulk moved back to Processing from Fulfillment Export.', 'woo-fulfillment-export');
+
+        $updated = 0;
+        foreach ($order_ids as $order_id) {
+            $order = $order_id ? wc_get_order($order_id) : null;
+            if (!$order instanceof WC_Order) {
+                continue;
+            }
+            if ($order->get_status() === $target_status) {
+                continue;
+            }
+            $order->update_status($target_status, $note, true);
+            $updated++;
+        }
+
+        $redirect = wp_get_referer() ?: admin_url('admin.php?page=wfe-orders');
+        $redirect = add_query_arg([
+            'wfe_success' => $target_status === 'fulfillment' ? 'bulk_fulfillment' : 'bulk_processing',
+            'wfe_count' => $updated,
+        ], $redirect);
         wp_safe_redirect($redirect);
         exit;
     }

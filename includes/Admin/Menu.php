@@ -197,6 +197,8 @@ final class WFE_Admin_Menu
             'api_deleted' => __('API connection deleted.', 'woo-fulfillment-export'),
             'marked_fulfillment' => __('Order marked as Fulfillment.', 'woo-fulfillment-export'),
             'marked_processing' => __('Order moved back to Processing.', 'woo-fulfillment-export'),
+            'bulk_fulfillment' => __('Selected orders marked as Fulfillment.', 'woo-fulfillment-export'),
+            'bulk_processing' => __('Selected orders moved back to Processing.', 'woo-fulfillment-export'),
         ];
         $error_messages = [
             'missing_file' => __('Please choose a CSV or XLSX file.', 'woo-fulfillment-export'),
@@ -207,6 +209,7 @@ final class WFE_Admin_Menu
             'invalid_manual_template' => __('Manual template name and type are required.', 'woo-fulfillment-export'),
             'empty_manual_columns' => __('Add at least one manual template column.', 'woo-fulfillment-export'),
             'order_not_found' => __('Order not found.', 'woo-fulfillment-export'),
+            'no_orders_selected' => __('Please select at least one order first.', 'woo-fulfillment-export'),
         ];
 
         if ($success !== '' && isset($success_messages[$success])) {

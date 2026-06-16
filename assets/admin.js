@@ -8,7 +8,7 @@
     const data = new FormData(form);
     const payload = {};
     data.forEach(function (value, key) {
-      if (key === '_wpnonce' || key === '_wp_http_referer' || key === 'action') {
+      if (key === '_wpnonce' || key === '_wp_http_referer' || key === 'action' || key === 'target_status') {
         return;
       }
       if (key.endsWith('[]')) {
@@ -71,14 +71,20 @@
     const selectAll = document.getElementById('wfe-select-all-orders');
     const count = document.getElementById('wfe-selected-count');
     const checks = Array.from(document.querySelectorAll('.wfe-order-check'));
+
+    function selectedCount() {
+      return checks.filter(function (check) { return check.checked; }).length;
+    }
+
     function updateCount() {
-      const selected = checks.filter(function (check) { return check.checked; }).length;
+      const selected = selectedCount();
       if (count) count.textContent = selected + ' selected';
       if (selectAll) {
         selectAll.checked = checks.length > 0 && selected === checks.length;
         selectAll.indeterminate = selected > 0 && selected < checks.length;
       }
     }
+
     if (selectAll) {
       selectAll.addEventListener('change', function () {
         checks.forEach(function (check) { check.checked = selectAll.checked; });
@@ -91,10 +97,19 @@
     const form = document.getElementById('wfe-export-form');
     if (!form || typeof WFE_EXPORT === 'undefined') return;
 
-    const button = form.querySelector('button[type="submit"], .button-primary');
+    const actionInput = document.getElementById('wfe-form-action');
+    const targetStatusInput = document.getElementById('wfe-target-status');
+    const exportButton = form.querySelector('.wfe-export-button');
     const progress = document.getElementById('wfe-export-progress');
     const bar = progress ? progress.querySelector('.wfe-progress-bar span') : null;
     const text = progress ? progress.querySelector('.wfe-progress-text') : null;
+    let lastSubmitter = null;
+
+    form.querySelectorAll('button[type="submit"]').forEach(function (button) {
+      button.addEventListener('click', function () {
+        lastSubmitter = button;
+      });
+    });
 
     function setProgress(percent, message) {
       if (progress) progress.hidden = false;
@@ -103,16 +118,35 @@
     }
 
     form.addEventListener('submit', function (event) {
+      const submitter = event.submitter || lastSubmitter;
+      const isBulkStatus = submitter && submitter.classList && submitter.classList.contains('wfe-bulk-status-button');
+
+      if (isBulkStatus) {
+        if (selectedCount() < 1) {
+          event.preventDefault();
+          alert(WFE_EXPORT.bulkNoSelectionText || 'Please select at least one order first.');
+          return;
+        }
+        if (actionInput) actionInput.value = 'wfe_bulk_update_orders';
+        if (targetStatusInput) targetStatusInput.value = submitter.getAttribute('data-target-status') || 'fulfillment';
+        return;
+      }
+
+      if (actionInput) actionInput.value = 'wfe_export_orders';
+      if (targetStatusInput) targetStatusInput.value = '';
+
       event.preventDefault();
       const payload = formToPayload(form);
       if (!payload.template_id) {
         alert('Please select a template.');
         return;
       }
-      if (button) {
-        button.disabled = true;
-        button.dataset.originalText = button.textContent;
-        button.textContent = WFE_EXPORT.processingText;
+      if (exportButton) {
+        exportButton.disabled = true;
+        exportButton.dataset.originalText = exportButton.textContent;
+        exportButton.classList.add('is-busy');
+        const exportLabel = exportButton.querySelector('span:last-child');
+        if (exportLabel) exportLabel.textContent = WFE_EXPORT.processingText;
       }
       setProgress(2, WFE_EXPORT.startingText);
 
@@ -146,9 +180,11 @@
         setProgress(0, error.message || WFE_EXPORT.errorText);
         alert(error.message || WFE_EXPORT.errorText);
       }).finally(function () {
-        if (button) {
-          button.disabled = false;
-          button.textContent = button.dataset.originalText || 'Export selected or filtered orders';
+        if (exportButton) {
+          exportButton.disabled = false;
+          exportButton.classList.remove('is-busy');
+          const label = exportButton.querySelector('span:last-child');
+          if (label) label.textContent = 'Export orders';
         }
       });
     });
