@@ -106,14 +106,11 @@ final class WFE_Product_Helper
 
     public static function order_matches_filters(WC_Order $order, array $filters): bool
     {
-<<<<<<< HEAD
-=======
         $order_query = trim((string) ($filters['order_query'] ?? ''));
         if ($order_query !== '' && !self::order_matches_order_query($order, $order_query)) {
             return false;
         }
 
->>>>>>> 33573ee (first commit)
         $customer = trim((string) ($filters['customer'] ?? ''));
         if ($customer !== '' && !self::order_matches_customer($order, $customer)) {
             return false;
@@ -136,8 +133,6 @@ final class WFE_Product_Helper
         return false;
     }
 
-<<<<<<< HEAD
-=======
     public static function order_matches_order_query(WC_Order $order, string $query): bool
     {
         $query = trim(ltrim($query, '#'));
@@ -179,7 +174,6 @@ final class WFE_Product_Helper
         return true;
     }
 
->>>>>>> 33573ee (first commit)
     public static function item_sku(WC_Order_Item_Product $item): string
     {
         $product = $item->get_product();

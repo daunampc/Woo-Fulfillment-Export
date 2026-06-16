@@ -4,23 +4,15 @@ Plugin WordPress/WooCommerce để xuất order fulfillment theo template CSV ho
 
 ## Chức năng
 
-<<<<<<< HEAD
-- Menu riêng: **Fulfillment Export** với các tab Orders, Templates, Mapping, Settings.
-=======
 - Menu riêng: **Fulfillment Export** với các tab Orders, Templates, Mapping, API Connections, Settings.
->>>>>>> 33573ee (first commit)
 - Upload template `.csv` hoặc `.xlsx` vào `wp-content/uploads/woo-fulfillment-export/templates/`.
 - Chặn upload định dạng khác bằng kiểm tra extension và MIME.
 - Tạo template thủ công CSV/XLSX trong admin, gồm header, mapping và default value.
 - Mapping theo cột, đọc header dòng đầu của CSV và đọc sheet/header row của XLSX nếu `ZipArchive` khả dụng.
 - Preview mapping bằng một order mẫu.
 - Export theo order được chọn hoặc export trực tiếp theo status/filter.
-<<<<<<< HEAD
-- Filter theo status, ngày, customer keyword, product name/ID, SKU và product category.
-=======
 - Filter theo status, ngày, Order ID/Number, customer keyword, product name/ID, SKU và product category.
 - Dynamic API mapping qua API Connections, ví dụ `{api:vtn_tasksave_url:{product_sku}}`.
->>>>>>> 33573ee (first commit)
 - Hai chế độ dòng: mỗi order item là một dòng hoặc mỗi order là một dòng.
 - Dùng WooCommerce CRUD (`wc_get_orders`, `wc_get_order`, order item APIs), không query trực tiếp bảng order, phù hợp hơn với HPOS.
 - Lấy SKU variation trước, fallback về parent SKU.
@@ -51,10 +43,7 @@ Plugin WordPress/WooCommerce để xuất order fulfillment theo template CSV ho
 {product_name} - {variation_attributes}
 {billing_full_name} / {billing_phone}
 {wcpa:engraving_text}
-<<<<<<< HEAD
-=======
 {api:vtn_tasksave_url:{product_sku}}
->>>>>>> 33573ee (first commit)
 {order_meta:delivery_code}
 {item_meta:custom_line_value}
 ```
@@ -111,11 +100,6 @@ WCPA / Product Addon / meta:
 
 Nếu placeholder không có dữ liệu, plugin trả về chuỗi rỗng.
 
-<<<<<<< HEAD
-## Ghi chú kỹ thuật
-
-- Product/SKU/category/customer filters được xử lý an toàn bằng cách query order theo status/date trước bằng `wc_get_orders()`, sau đó lọc trong PHP.
-=======
 ## Filter Orders
 
 - **SKU**: nhập một phần SKU để match simple product SKU, variation SKU, hoặc parent product SKU nếu variation không có SKU. Search không phân biệt hoa thường.
@@ -171,7 +155,6 @@ Cache API dùng transient theo `connection key + query`, đồng thời có memo
 ## Ghi chú kỹ thuật
 
 - Product/SKU/category/customer/order-number filters được xử lý an toàn bằng cách query order theo status/date trước bằng `wc_get_orders()`, sau đó lọc trong PHP.
->>>>>>> 33573ee (first commit)
 - Vào **Settings** để chỉnh `Export batch limit` và `Filter scan limit` cho shop lớn.
 - Template XLSX upload được giữ layout gốc và ghi dữ liệu vào sheet/start row đã chọn. Template XLSX thủ công tạo workbook đơn giản gồm header và data rows.
 - Legacy template cũ trong `wp-content/uploads/wfe-templates/` vẫn được đọc/xóa nếu tồn tại; upload mới dùng thư mục chuẩn mới.
@@ -181,9 +164,6 @@ Cache API dùng transient theo `connection key + query`, đồng thời có memo
 - Chưa có background queue/export async. Với shop rất lớn, nên dùng batch nền thay vì export trong một request admin.
 - XLSX inspector đọc sheet/header phổ biến nhưng chưa xử lý đầy đủ mọi workbook phức tạp có relationship tùy biến hoặc công thức đặc biệt.
 - Chưa có export log hoặc đánh dấu order đã export.
-<<<<<<< HEAD
-# Woo-Fulfillment-Export
-=======
 
 ## Version 1.2.0 changes
 
@@ -219,4 +199,3 @@ The plugin can check GitHub releases for updates.
 4. Create GitHub releases with version tags such as `v1.3.1`.
 
 The updater reads the latest GitHub release and compares its tag against the installed plugin version.
->>>>>>> 33573ee (first commit)

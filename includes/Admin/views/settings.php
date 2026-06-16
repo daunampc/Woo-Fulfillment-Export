@@ -15,11 +15,7 @@
                     <th scope="row"><?php esc_html_e('Default statuses', 'woo-fulfillment-export'); ?></th>
                     <td>
                         <div class="wfe-checkbox-group wfe-status-options">
-<<<<<<< HEAD
-                            <?php foreach (wc_get_order_statuses() as $key => $label): $clean = str_replace('wc-', '', $key); ?>
-=======
                             <?php foreach (WFE_Order_Query::fulfillment_status_options() as $key => $label): $clean = str_replace('wc-', '', $key); ?>
->>>>>>> 33573ee (first commit)
                                 <label class="wfe-checkbox">
                                     <input type="checkbox" name="default_statuses[]" value="<?php echo esc_attr($clean); ?>" <?php checked(in_array($clean, $settings['default_statuses'], true)); ?>>
                                     <span><?php echo esc_html($label); ?></span>
@@ -51,8 +47,6 @@
                         <p class="description"><?php esc_html_e('Maximum orders scanned in PHP for product, SKU, category, and customer filters.', 'woo-fulfillment-export'); ?></p>
                     </td>
                 </tr>
-<<<<<<< HEAD
-=======
                 <tr>
                     <th scope="row"><label for="wfe-orders-per-page"><?php esc_html_e('Orders per page', 'woo-fulfillment-export'); ?></label></th>
                     <td>
@@ -88,7 +82,6 @@
                         <p class="description"><?php esc_html_e('Optional. Needed only for private repositories or private release assets.', 'woo-fulfillment-export'); ?></p>
                     </td>
                 </tr>
->>>>>>> 33573ee (first commit)
             </table>
 
             <button class="button button-primary"><?php esc_html_e('Save settings', 'woo-fulfillment-export'); ?></button>

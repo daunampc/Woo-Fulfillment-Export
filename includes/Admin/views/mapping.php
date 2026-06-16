@@ -176,8 +176,6 @@ uksort($mapping_columns, static function ($a, $b) {
                                 <button type="button" class="button" id="wfe-insert-wcpa"><?php esc_html_e('Insert WCPA', 'woo-fulfillment-export'); ?></button>
                             </div>
                         <?php endif; ?>
-<<<<<<< HEAD
-=======
                         <?php if (strpos((string) $group, 'API Dynamic') !== false): ?>
                             <p class="description wfe-help-text"><?php esc_html_e('This calls the configured API using the resolved query value and returns the configured response path, e.g. data.0.URL.', 'woo-fulfillment-export'); ?></p>
                             <?php foreach ((array) ($api_connections ?? []) as $connection): ?>
@@ -207,7 +205,6 @@ uksort($mapping_columns, static function ($a, $b) {
                                 <p><a href="<?php echo esc_url(admin_url('admin.php?page=wfe-api-connections')); ?>"><?php esc_html_e('Create an API connection first.', 'woo-fulfillment-export'); ?></a></p>
                             <?php endif; ?>
                         <?php endif; ?>
->>>>>>> 33573ee (first commit)
                         <div class="wfe-chip-list">
                             <?php foreach ($placeholders as $placeholder): ?>
                                 <button type="button" class="button wfe-placeholder-chip" data-placeholder="<?php echo esc_attr($placeholder); ?>"><?php echo esc_html($placeholder); ?></button>
@@ -297,8 +294,6 @@ uksort($mapping_columns, static function ($a, $b) {
             insertPlaceholder('{wcpa:' + field + '}');
         });
     }
-<<<<<<< HEAD
-=======
     document.querySelectorAll('.wfe-insert-api').forEach(function(button) {
         button.addEventListener('click', function() {
             const box = button.closest('.wfe-api-builder');
@@ -322,6 +317,5 @@ uksort($mapping_columns, static function ($a, $b) {
             insertPlaceholder('{api:' + button.getAttribute('data-connection') + ':' + query + '}');
         });
     });
->>>>>>> 33573ee (first commit)
 })();
 </script>

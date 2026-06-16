@@ -6,27 +6,11 @@ final class WFE_Xlsx_Template_Exporter
 {
     public function download(array $template, array $mapping, array $rows): void
     {
-<<<<<<< HEAD
-        if (!class_exists('ZipArchive')) {
-            wp_die('PHP ZipArchive extension is required to export XLSX files.');
-        }
-
-=======
->>>>>>> 33573ee (first commit)
         $tmp = wp_tempnam('wfe-export.xlsx');
         if (!$tmp) {
             wp_die('Could not prepare export file.');
         }
 
-<<<<<<< HEAD
-        if (($template['source'] ?? 'upload') === 'manual') {
-            $this->create_simple_workbook($tmp, $template, $mapping, $rows);
-            $this->send_file($tmp);
-        }
-
-        $source = $template['file_path'];
-        if (!WFE_Template_Repository::is_template_path((string) $source) || !copy($source, $tmp)) {
-=======
         $this->save_file($template, $mapping, $rows, $tmp);
         $this->send_file($tmp);
     }
@@ -44,7 +28,6 @@ final class WFE_Xlsx_Template_Exporter
 
         $source = $template['file_path'];
         if (!WFE_Template_Repository::is_template_path((string) $source) || !copy($source, $target)) {
->>>>>>> 33573ee (first commit)
             wp_die('Could not prepare export file.');
         }
 
@@ -53,11 +36,7 @@ final class WFE_Xlsx_Template_Exporter
         $columns = WFE_Mapping_Repository::export_columns($template, $mapping);
 
         $zip = new ZipArchive();
-<<<<<<< HEAD
-        if ($zip->open($tmp) !== true) {
-=======
         if ($zip->open($target) !== true) {
->>>>>>> 33573ee (first commit)
             wp_die('Could not open XLSX template.');
         }
 
@@ -77,11 +56,6 @@ final class WFE_Xlsx_Template_Exporter
         $zip->deleteName($sheet_path);
         $zip->addFromString($sheet_path, $xml);
         $zip->close();
-<<<<<<< HEAD
-
-        $this->send_file($tmp);
-=======
->>>>>>> 33573ee (first commit)
     }
 
     private function send_file(string $tmp): void

@@ -322,16 +322,6 @@
 }
 
 .wfe-wcpa-builder {
-<<<<<<< HEAD
-  display: flex;
-  gap: 8px;
-  margin: 8px 0 10px;
-}
-
-.wfe-wcpa-builder input {
-  min-width: 0;
-  flex: 1;
-=======
     display: flex;
     gap: 8px;
     margin: 8px 0 10px;
@@ -382,7 +372,6 @@
 .wfe-api-builder label {
     display: grid;
     gap: 4px;
->>>>>>> 33573ee (first commit)
 }
 
 .wfe-wcpa-preview {
@@ -483,8 +472,6 @@
 .check-column .wfe-checkbox input {
   width: auto;
 }
-<<<<<<< HEAD
-=======
 
 /* v1.2 Orders polish */
 .wfe-wrap {
@@ -725,4 +712,3 @@
   color: #4b5563;
   font-weight: 600;
 }
->>>>>>> 33573ee (first commit)

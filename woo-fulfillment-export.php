@@ -2,11 +2,7 @@
 /**
  * Plugin Name: Woo Fulfillment Export
  * Description: Export WooCommerce fulfillment orders to CSV/XLSX templates with flexible mappings, filters, variable products, and WCPA order meta.
-<<<<<<< HEAD
- * Version: 1.1.0
-=======
  * Version: 1.3.0
->>>>>>> 33573ee (first commit)
  * Author: Admin
  * Requires Plugins: woocommerce
  * Text Domain: woo-fulfillment-export
@@ -14,11 +10,7 @@
 
 defined('ABSPATH') || exit;
 
-<<<<<<< HEAD
-define('WFE_VERSION', '1.1.0');
-=======
 define('WFE_VERSION', '1.3.0');
->>>>>>> 33573ee (first commit)
 define('WFE_FILE', __FILE__);
 define('WFE_PATH', plugin_dir_path(__FILE__));
 define('WFE_URL', plugin_dir_url(__FILE__));
@@ -37,22 +29,16 @@ spl_autoload_register(function ($class) {
         'WFE_Template_Resolver' => 'includes/Export/TemplateResolver.php',
         'WFE_Placeholder_Resolver' => 'includes/Export/PlaceholderResolver.php',
         'WFE_Template_Inspector' => 'includes/Export/TemplateInspector.php',
-<<<<<<< HEAD
-=======
         'WFE_Dynamic_Api_Resolver' => 'includes/Export/DynamicApiResolver.php',
         'WFE_Api_Client' => 'includes/Api/ApiClient.php',
         'WFE_Api_Connection_Repository' => 'includes/Api/ApiConnectionRepository.php',
         'WFE_Array_Helper' => 'includes/Helpers/ArrayHelper.php',
->>>>>>> 33573ee (first commit)
         'WFE_Settings' => 'includes/Data/Settings.php',
         'WFE_Template_Repository' => 'includes/Data/TemplateRepository.php',
         'WFE_Mapping_Repository' => 'includes/Data/MappingRepository.php',
         'WFE_Product_Helper' => 'includes/Helpers/ProductHelper.php',
         'WFE_WCPA_Helper' => 'includes/Helpers/WcpaHelper.php',
-<<<<<<< HEAD
-=======
         'WFE_GitHub_Updater' => 'includes/Updater/GitHubUpdater.php',
->>>>>>> 33573ee (first commit)
     ];
 
     if (!empty($map[$class])) {
@@ -64,11 +50,8 @@ final class WFE_Plugin
 {
     public function boot(): void
     {
-<<<<<<< HEAD
-=======
         add_action('init', [$this, 'register_fulfillment_order_status']);
         add_filter('wc_order_statuses', [$this, 'add_fulfillment_order_status']);
->>>>>>> 33573ee (first commit)
         add_action('admin_menu', ['WFE_Admin_Menu', 'register']);
         add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_assets']);
 
@@ -77,9 +60,6 @@ final class WFE_Plugin
         add_action('admin_post_wfe_delete_template', [$this, 'handle_delete_template']);
         add_action('admin_post_wfe_save_mapping', [$this, 'handle_save_mapping']);
         add_action('admin_post_wfe_export_orders', [$this, 'handle_export_orders']);
-<<<<<<< HEAD
-        add_action('admin_post_wfe_save_settings', [$this, 'handle_save_settings']);
-=======
         add_action('admin_post_wfe_download_export', [$this, 'handle_download_export']);
         add_action('wp_ajax_wfe_start_export', [$this, 'ajax_start_export']);
         add_action('wp_ajax_wfe_process_export', [$this, 'ajax_process_export']);
@@ -123,7 +103,6 @@ final class WFE_Plugin
         }
 
         return $new_statuses;
->>>>>>> 33573ee (first commit)
     }
 
     public function enqueue_admin_assets($hook): void
@@ -133,8 +112,6 @@ final class WFE_Plugin
         }
 
         wp_enqueue_style('wfe-admin', WFE_URL . 'assets/admin.css', [], WFE_VERSION);
-<<<<<<< HEAD
-=======
         wp_enqueue_script('wfe-admin', WFE_URL . 'assets/admin.js', [], WFE_VERSION, true);
         wp_localize_script('wfe-admin', 'WFE_EXPORT', [
             'ajaxUrl' => admin_url('admin-ajax.php'),
@@ -144,7 +121,6 @@ final class WFE_Plugin
             'doneText' => __('Export ready. Downloading...', 'woo-fulfillment-export'),
             'errorText' => __('Export failed. Please try again.', 'woo-fulfillment-export'),
         ]);
->>>>>>> 33573ee (first commit)
     }
 
     private function assert_access(string $nonce_action): void
@@ -368,10 +344,7 @@ final class WFE_Plugin
 
         $formatter = new WFE_Order_Formatter();
         $rows = $formatter->format_orders($order_ids, $mapping['row_mode'] ?? ($mapping['one_row_per'] ?? 'item_per_row'));
-<<<<<<< HEAD
-=======
         $this->mark_orders_fulfillment($order_ids);
->>>>>>> 33573ee (first commit)
 
         if (($template['file_type'] ?? 'xlsx') === 'csv') {
             (new WFE_Csv_Template_Exporter())->download($template, $mapping, $rows);
@@ -380,8 +353,6 @@ final class WFE_Plugin
         (new WFE_Xlsx_Template_Exporter())->download($template, $mapping, $rows);
     }
 
-<<<<<<< HEAD
-=======
     public function ajax_start_export(): void
     {
         $this->assert_ajax_access();
@@ -586,7 +557,6 @@ final class WFE_Plugin
         exit;
     }
 
->>>>>>> 33573ee (first commit)
     public function handle_save_settings(): void
     {
         $this->assert_access('wfe_save_settings');
@@ -597,14 +567,11 @@ final class WFE_Plugin
             'row_mode' => sanitize_key(wp_unslash($_POST['row_mode'] ?? 'item_per_row')),
             'export_limit' => max(1, min(5000, absint($_POST['export_limit'] ?? 500))),
             'scan_limit' => max(100, min(10000, absint($_POST['scan_limit'] ?? 2000))),
-<<<<<<< HEAD
-=======
             'orders_per_page' => max(5, min(200, absint($_POST['orders_per_page'] ?? 30))),
             'ajax_chunk_size' => max(1, min(100, absint($_POST['ajax_chunk_size'] ?? 20))),
             'github_repo' => sanitize_text_field(wp_unslash($_POST['github_repo'] ?? '')),
             'github_branch' => sanitize_text_field(wp_unslash($_POST['github_branch'] ?? 'main')),
             'github_token' => sanitize_text_field(wp_unslash($_POST['github_token'] ?? '')),
->>>>>>> 33573ee (first commit)
         ];
 
         if (!in_array($settings['row_mode'], ['item_per_row', 'order_per_row'], true)) {
@@ -617,8 +584,6 @@ final class WFE_Plugin
         exit;
     }
 
-<<<<<<< HEAD
-=======
     public function handle_save_api_connection(): void
     {
         $this->assert_access('wfe_api_connection');
@@ -670,7 +635,6 @@ final class WFE_Plugin
         wp_safe_redirect(admin_url('admin.php?page=wfe-api-connections&edit_key=' . rawurlencode((string) ($connection['key'] ?? '')) . '&wfe_test=1'));
     }
 
->>>>>>> 33573ee (first commit)
     private function redirect_templates(string $error): void
     {
         wp_safe_redirect(admin_url('admin.php?page=wfe-templates&wfe_error=' . rawurlencode($error)));
@@ -702,8 +666,6 @@ final class WFE_Plugin
             || ($checked['type'] ?? '') === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
     }
 
-<<<<<<< HEAD
-=======
 
     private function assert_ajax_access(): void
     {
@@ -737,7 +699,6 @@ final class WFE_Plugin
         }
     }
 
->>>>>>> 33573ee (first commit)
     private function sanitize_manual_columns($raw_columns): array
     {
         $raw_columns = is_array($raw_columns) ? wp_unslash($raw_columns) : [];
@@ -778,18 +739,13 @@ final class WFE_Plugin
             'status' => WFE_Order_Query::sanitize_statuses(isset($source['status']) ? (array) wp_unslash($source['status']) : []),
             'date_from' => sanitize_text_field(wp_unslash($source['date_from'] ?? '')),
             'date_to' => sanitize_text_field(wp_unslash($source['date_to'] ?? '')),
-<<<<<<< HEAD
-=======
             'order_query' => sanitize_text_field(wp_unslash($source['order_query'] ?? '')),
->>>>>>> 33573ee (first commit)
             'customer' => sanitize_text_field(wp_unslash($source['customer'] ?? '')),
             'product' => sanitize_text_field(wp_unslash($source['product'] ?? '')),
             'sku' => sanitize_text_field(wp_unslash($source['sku'] ?? '')),
             'category' => sanitize_text_field(wp_unslash($source['category'] ?? '')),
         ];
     }
-<<<<<<< HEAD
-=======
 
     private function posted_api_connection(): array
     {
@@ -842,7 +798,6 @@ final class WFE_Plugin
 
         return $headers;
     }
->>>>>>> 33573ee (first commit)
 }
 
 add_action('plugins_loaded', function () {
