@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Woo Fulfillment Export
  * Description: Export WooCommerce fulfillment orders to CSV/XLSX templates with flexible mappings, filters, variable products, and WCPA order meta.
- * Version: 1.3.0
+ * Version: 1.3.1
  * Author: Admin
  * Requires Plugins: woocommerce
  * Text Domain: woo-fulfillment-export
@@ -10,7 +10,7 @@
 
 defined('ABSPATH') || exit;
 
-define('WFE_VERSION', '1.3.0');
+define('WFE_VERSION', '1.3.1');
 define('WFE_FILE', __FILE__);
 define('WFE_PATH', plugin_dir_path(__FILE__));
 define('WFE_URL', plugin_dir_url(__FILE__));
@@ -569,7 +569,6 @@ final class WFE_Plugin
             'scan_limit' => max(100, min(10000, absint($_POST['scan_limit'] ?? 2000))),
             'orders_per_page' => max(5, min(200, absint($_POST['orders_per_page'] ?? 30))),
             'ajax_chunk_size' => max(1, min(100, absint($_POST['ajax_chunk_size'] ?? 20))),
-            'github_repo' => sanitize_text_field(wp_unslash($_POST['github_repo'] ?? '')),
             'github_branch' => sanitize_text_field(wp_unslash($_POST['github_branch'] ?? 'main')),
             'github_token' => sanitize_text_field(wp_unslash($_POST['github_token'] ?? '')),
         ];

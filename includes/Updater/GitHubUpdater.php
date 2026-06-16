@@ -4,6 +4,9 @@ defined('ABSPATH') || exit;
 
 final class WFE_GitHub_Updater
 {
+    private const REPO = 'daunampc/Woo-Fulfillment-Export';
+    private const REPO_URL = 'https://github.com/daunampc/Woo-Fulfillment-Export';
+
     private string $plugin_basename;
 
     public function __construct()
@@ -21,10 +24,7 @@ final class WFE_GitHub_Updater
         }
 
         $settings = WFE_Settings::all();
-        $repo = trim((string) ($settings['github_repo'] ?? ''));
-        if ($repo === '' || strpos($repo, '/') === false) {
-            return $transient;
-        }
+        $repo = self::REPO;
 
         $release = $this->latest_release($repo, (string) ($settings['github_token'] ?? ''));
         if (!$release) {
@@ -46,7 +46,7 @@ final class WFE_GitHub_Updater
             'slug' => dirname($this->plugin_basename),
             'plugin' => $this->plugin_basename,
             'new_version' => $remote_version,
-            'url' => 'https://github.com/' . $repo,
+            'url' => self::REPO_URL,
             'package' => $package,
             'tested' => get_bloginfo('version'),
             'requires_php' => '7.4',
@@ -62,10 +62,7 @@ final class WFE_GitHub_Updater
         }
 
         $settings = WFE_Settings::all();
-        $repo = trim((string) ($settings['github_repo'] ?? ''));
-        if ($repo === '' || strpos($repo, '/') === false) {
-            return $result;
-        }
+        $repo = self::REPO;
 
         $release = $this->latest_release($repo, (string) ($settings['github_token'] ?? ''));
         if (!$release) {
@@ -77,7 +74,7 @@ final class WFE_GitHub_Updater
             'slug' => dirname($this->plugin_basename),
             'version' => ltrim((string) ($release['tag_name'] ?? WFE_VERSION), 'vV'),
             'author' => 'Admin',
-            'homepage' => 'https://github.com/' . $repo,
+            'homepage' => self::REPO_URL,
             'download_link' => $this->package_url($release, $repo),
             'sections' => [
                 'description' => 'WooCommerce fulfillment export with CSV/XLSX templates.',

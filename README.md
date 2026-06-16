@@ -191,11 +191,17 @@ The Orders page now supports a configurable limit. Use the **Orders per page** d
 
 ### GitHub updates
 
-The plugin can check GitHub releases for updates.
+The plugin checks GitHub releases from the fixed repository `https://github.com/daunampc/Woo-Fulfillment-Export`.
 
 1. Go to **Fulfillment Export > Settings**.
-2. Set **GitHub repository** as `owner/repository`.
-3. Optionally set a GitHub token for private repositories or private assets.
-4. Create GitHub releases with version tags such as `v1.3.1`.
+2. Keep the fallback branch as `main` unless your default branch is different.
+3. Optionally set a GitHub token for private repositories or private release assets.
+4. Create GitHub releases with version tags such as `v1.3.2`.
 
 The updater reads the latest GitHub release and compares its tag against the installed plugin version.
+
+
+## Version 1.3.1
+
+- GitHub updater repository is now fixed to `https://github.com/daunampc/Woo-Fulfillment-Export`.
+- Settings no longer require entering `owner/repo`; only branch fallback and optional token remain.

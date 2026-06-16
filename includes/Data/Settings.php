@@ -15,7 +15,7 @@ final class WFE_Settings
             'scan_limit' => 2000,
             'orders_per_page' => 30,
             'ajax_chunk_size' => 20,
-            'github_repo' => '',
+            'github_repo' => 'daunampc/Woo-Fulfillment-Export',
             'github_branch' => 'main',
             'github_token' => '',
         ];
@@ -35,7 +35,7 @@ final class WFE_Settings
         $settings['scan_limit'] = max(100, absint($settings['scan_limit']));
         $settings['orders_per_page'] = max(5, min(200, absint($settings['orders_per_page'] ?? 30)));
         $settings['ajax_chunk_size'] = max(1, min(100, absint($settings['ajax_chunk_size'] ?? 20)));
-        $settings['github_repo'] = sanitize_text_field((string) ($settings['github_repo'] ?? ''));
+        $settings['github_repo'] = 'daunampc/Woo-Fulfillment-Export';
         $settings['github_branch'] = sanitize_text_field((string) ($settings['github_branch'] ?? 'main'));
         $settings['github_token'] = sanitize_text_field((string) ($settings['github_token'] ?? ''));
 
@@ -57,7 +57,7 @@ final class WFE_Settings
         $settings['scan_limit'] = max(100, min(10000, absint($settings['scan_limit'] ?? 2000)));
         $settings['orders_per_page'] = max(5, min(200, absint($settings['orders_per_page'] ?? 30)));
         $settings['ajax_chunk_size'] = max(1, min(100, absint($settings['ajax_chunk_size'] ?? 20)));
-        $settings['github_repo'] = sanitize_text_field((string) ($settings['github_repo'] ?? ''));
+        $settings['github_repo'] = 'daunampc/Woo-Fulfillment-Export';
         $settings['github_branch'] = sanitize_text_field((string) ($settings['github_branch'] ?? 'main'));
         $settings['github_token'] = sanitize_text_field((string) ($settings['github_token'] ?? ''));
 

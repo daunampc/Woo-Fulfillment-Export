@@ -62,10 +62,10 @@
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="wfe-github-repo"><?php esc_html_e('GitHub repository', 'woo-fulfillment-export'); ?></label></th>
+                    <th scope="row"><?php esc_html_e('GitHub repository', 'woo-fulfillment-export'); ?></th>
                     <td>
-                        <input id="wfe-github-repo" type="text" name="github_repo" class="regular-text" placeholder="owner/repository" value="<?php echo esc_attr($settings['github_repo']); ?>">
-                        <p class="description"><?php esc_html_e('Optional. Use owner/repository to enable WordPress update checks from GitHub latest releases.', 'woo-fulfillment-export'); ?></p>
+                        <code>https://github.com/daunampc/Woo-Fulfillment-Export</code>
+                        <p class="description"><?php esc_html_e('Fixed repository used for WordPress update checks from GitHub latest releases.', 'woo-fulfillment-export'); ?></p>
                     </td>
                 </tr>
                 <tr>
