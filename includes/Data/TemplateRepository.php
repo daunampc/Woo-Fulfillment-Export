@@ -12,6 +12,23 @@ final class WFE_Template_Repository
         return trailingslashit($upload_dir['basedir']) . 'woo-fulfillment-export/templates';
     }
 
+<<<<<<< HEAD
+=======
+
+    public static function exports_dir(): string
+    {
+        $upload_dir = wp_upload_dir();
+        return trailingslashit($upload_dir['basedir']) . 'woo-fulfillment-export/exports';
+    }
+
+    public static function is_export_path(string $path): bool
+    {
+        $real = wp_normalize_path($path);
+        $base = wp_normalize_path(trailingslashit(self::exports_dir()));
+        return strpos($real, $base) === 0;
+    }
+
+>>>>>>> 33573ee (first commit)
     public static function legacy_templates_dir(): string
     {
         $upload_dir = wp_upload_dir();

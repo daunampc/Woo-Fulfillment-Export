@@ -19,6 +19,10 @@ final class WFE_Admin_Menu
         add_submenu_page('wfe-orders', __('Orders', 'woo-fulfillment-export'), __('Orders', 'woo-fulfillment-export'), 'manage_woocommerce', 'wfe-orders', [__CLASS__, 'orders_page']);
         add_submenu_page('wfe-orders', __('Templates', 'woo-fulfillment-export'), __('Templates', 'woo-fulfillment-export'), 'manage_woocommerce', 'wfe-templates', [__CLASS__, 'templates_page']);
         add_submenu_page('wfe-orders', __('Mapping', 'woo-fulfillment-export'), __('Mapping', 'woo-fulfillment-export'), 'manage_woocommerce', 'wfe-mapping', [__CLASS__, 'mapping_page']);
+<<<<<<< HEAD
+=======
+        add_submenu_page('wfe-orders', __('API Connections', 'woo-fulfillment-export'), __('API Connections', 'woo-fulfillment-export'), 'manage_woocommerce', 'wfe-api-connections', [__CLASS__, 'api_connections_page']);
+>>>>>>> 33573ee (first commit)
         add_submenu_page('wfe-orders', __('Settings', 'woo-fulfillment-export'), __('Settings', 'woo-fulfillment-export'), 'manage_woocommerce', 'wfe-settings', [__CLASS__, 'settings_page']);
     }
 
@@ -30,26 +34,50 @@ final class WFE_Admin_Menu
 
         $query = new WFE_Order_Query();
         $settings = WFE_Settings::all();
+<<<<<<< HEAD
         $status = isset($_GET['status']) ? WFE_Order_Query::sanitize_statuses((array) wp_unslash($_GET['status'])) : $settings['default_statuses'];
         if (!$status) {
             $status = $settings['default_statuses'];
         }
         $page = max(1, absint($_GET['paged'] ?? 1));
+=======
+        $available_statuses = WFE_Order_Query::fulfillment_status_options();
+        $allowed_statuses = array_map(static function ($key) { return str_replace('wc-', '', (string) $key); }, array_keys($available_statuses));
+        $status = isset($_GET['status']) ? WFE_Order_Query::sanitize_statuses((array) wp_unslash($_GET['status'])) : $settings['default_statuses'];
+        $status = array_values(array_intersect($status, $allowed_statuses));
+        if (!$status) {
+            $status = $allowed_statuses;
+        }
+        $page = max(1, absint($_GET['paged'] ?? 1));
+        $per_page = max(5, min(200, absint($_GET['per_page'] ?? ($settings['orders_per_page'] ?? 30))));
+>>>>>>> 33573ee (first commit)
         $filters = [
             'status' => $status,
             'date_from' => sanitize_text_field(wp_unslash($_GET['date_from'] ?? '')),
             'date_to' => sanitize_text_field(wp_unslash($_GET['date_to'] ?? '')),
+<<<<<<< HEAD
+=======
+            'order_query' => sanitize_text_field(wp_unslash($_GET['order_query'] ?? '')),
+>>>>>>> 33573ee (first commit)
             'customer' => sanitize_text_field(wp_unslash($_GET['customer'] ?? '')),
             'product' => sanitize_text_field(wp_unslash($_GET['product'] ?? '')),
             'sku' => sanitize_text_field(wp_unslash($_GET['sku'] ?? '')),
             'category' => sanitize_text_field(wp_unslash($_GET['category'] ?? '')),
+<<<<<<< HEAD
             'limit' => 30,
+=======
+            'limit' => $per_page,
+>>>>>>> 33573ee (first commit)
             'page' => $page,
         ];
         $result = $query->get_orders([
             'status' => $filters['status'],
             'date_from' => $filters['date_from'],
             'date_to' => $filters['date_to'],
+<<<<<<< HEAD
+=======
+            'order_query' => $filters['order_query'],
+>>>>>>> 33573ee (first commit)
             'customer' => $filters['customer'],
             'product' => $filters['product'],
             'sku' => $filters['sku'],
@@ -106,6 +134,10 @@ final class WFE_Admin_Menu
         $header_row = max(1, absint($_GET['header_row'] ?? ($mapping['header_row'] ?? 1)));
         $inspection = $selected_template ? (new WFE_Template_Inspector())->inspect($selected_template, $sheet_index, $header_row) : ['sheets' => [], 'headers' => [], 'error' => ''];
         $placeholder_groups = WFE_Placeholder_Resolver::groups();
+<<<<<<< HEAD
+=======
+        $api_connections = (new WFE_Api_Connection_Repository())->all();
+>>>>>>> 33573ee (first commit)
         $preview_order_id = absint($_GET['preview_order_id'] ?? 0);
         $preview_row = null;
         $preview_wcpa_fields = [];
@@ -124,6 +156,31 @@ final class WFE_Admin_Menu
         include WFE_PATH . 'includes/Admin/views/mapping.php';
     }
 
+<<<<<<< HEAD
+=======
+    public static function api_connections_page(): void
+    {
+        if (!current_user_can('manage_woocommerce')) {
+            wp_die('Permission denied');
+        }
+
+        $repo = new WFE_Api_Connection_Repository();
+        $connections = $repo->all();
+        $edit_key = WFE_Api_Connection_Repository::sanitize_key(wp_unslash($_GET['edit_key'] ?? ''));
+        $edit_connection = $edit_key !== '' ? $repo->find($edit_key) : null;
+        $test_result = get_transient('wfe_api_test_' . get_current_user_id());
+        if (is_array($test_result)) {
+            delete_transient('wfe_api_test_' . get_current_user_id());
+            if (!empty($test_result['connection']) && is_array($test_result['connection'])) {
+                $edit_connection = $test_result['connection'];
+                $edit_key = (string) ($edit_connection['key'] ?? $edit_key);
+            }
+        }
+
+        include WFE_PATH . 'includes/Admin/views/api-connections.php';
+    }
+
+>>>>>>> 33573ee (first commit)
     public static function settings_page(): void
     {
         if (!current_user_can('manage_woocommerce')) {
@@ -140,6 +197,10 @@ final class WFE_Admin_Menu
             'wfe-orders' => __('Orders', 'woo-fulfillment-export'),
             'wfe-templates' => __('Templates', 'woo-fulfillment-export'),
             'wfe-mapping' => __('Mapping', 'woo-fulfillment-export'),
+<<<<<<< HEAD
+=======
+            'wfe-api-connections' => __('API Connections', 'woo-fulfillment-export'),
+>>>>>>> 33573ee (first commit)
             'wfe-settings' => __('Settings', 'woo-fulfillment-export'),
         ];
 
@@ -162,6 +223,13 @@ final class WFE_Admin_Menu
             'deleted' => __('Template deleted.', 'woo-fulfillment-export'),
             'saved' => __('Settings saved.', 'woo-fulfillment-export'),
             'mapping_saved' => __('Mapping saved.', 'woo-fulfillment-export'),
+<<<<<<< HEAD
+=======
+            'api_saved' => __('API connection saved.', 'woo-fulfillment-export'),
+            'api_deleted' => __('API connection deleted.', 'woo-fulfillment-export'),
+            'marked_fulfillment' => __('Order marked as Fulfillment.', 'woo-fulfillment-export'),
+            'marked_processing' => __('Order moved back to Processing.', 'woo-fulfillment-export'),
+>>>>>>> 33573ee (first commit)
         ];
         $error_messages = [
             'missing_file' => __('Please choose a CSV or XLSX file.', 'woo-fulfillment-export'),
@@ -171,6 +239,10 @@ final class WFE_Admin_Menu
             'upload_failed' => __('Could not save the uploaded template.', 'woo-fulfillment-export'),
             'invalid_manual_template' => __('Manual template name and type are required.', 'woo-fulfillment-export'),
             'empty_manual_columns' => __('Add at least one manual template column.', 'woo-fulfillment-export'),
+<<<<<<< HEAD
+=======
+            'order_not_found' => __('Order not found.', 'woo-fulfillment-export'),
+>>>>>>> 33573ee (first commit)
         ];
 
         if ($success !== '' && isset($success_messages[$success])) {

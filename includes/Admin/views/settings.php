@@ -15,7 +15,11 @@
                     <th scope="row"><?php esc_html_e('Default statuses', 'woo-fulfillment-export'); ?></th>
                     <td>
                         <div class="wfe-checkbox-group wfe-status-options">
+<<<<<<< HEAD
                             <?php foreach (wc_get_order_statuses() as $key => $label): $clean = str_replace('wc-', '', $key); ?>
+=======
+                            <?php foreach (WFE_Order_Query::fulfillment_status_options() as $key => $label): $clean = str_replace('wc-', '', $key); ?>
+>>>>>>> 33573ee (first commit)
                                 <label class="wfe-checkbox">
                                     <input type="checkbox" name="default_statuses[]" value="<?php echo esc_attr($clean); ?>" <?php checked(in_array($clean, $settings['default_statuses'], true)); ?>>
                                     <span><?php echo esc_html($label); ?></span>
@@ -47,6 +51,44 @@
                         <p class="description"><?php esc_html_e('Maximum orders scanned in PHP for product, SKU, category, and customer filters.', 'woo-fulfillment-export'); ?></p>
                     </td>
                 </tr>
+<<<<<<< HEAD
+=======
+                <tr>
+                    <th scope="row"><label for="wfe-orders-per-page"><?php esc_html_e('Orders per page', 'woo-fulfillment-export'); ?></label></th>
+                    <td>
+                        <input id="wfe-orders-per-page" type="number" name="orders_per_page" min="5" max="200" value="<?php echo esc_attr($settings['orders_per_page']); ?>">
+                        <p class="description"><?php esc_html_e('Default number of orders shown on the Orders page.', 'woo-fulfillment-export'); ?></p>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row"><label for="wfe-ajax-chunk-size"><?php esc_html_e('AJAX export chunk size', 'woo-fulfillment-export'); ?></label></th>
+                    <td>
+                        <input id="wfe-ajax-chunk-size" type="number" name="ajax_chunk_size" min="1" max="100" value="<?php echo esc_attr($settings['ajax_chunk_size']); ?>">
+                        <p class="description"><?php esc_html_e('How many orders are processed per AJAX request during export. Lower this if the server is weak.', 'woo-fulfillment-export'); ?></p>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row"><label for="wfe-github-repo"><?php esc_html_e('GitHub repository', 'woo-fulfillment-export'); ?></label></th>
+                    <td>
+                        <input id="wfe-github-repo" type="text" name="github_repo" class="regular-text" placeholder="owner/repository" value="<?php echo esc_attr($settings['github_repo']); ?>">
+                        <p class="description"><?php esc_html_e('Optional. Use owner/repository to enable WordPress update checks from GitHub latest releases.', 'woo-fulfillment-export'); ?></p>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row"><label for="wfe-github-branch"><?php esc_html_e('GitHub fallback branch', 'woo-fulfillment-export'); ?></label></th>
+                    <td>
+                        <input id="wfe-github-branch" type="text" name="github_branch" class="regular-text" value="<?php echo esc_attr($settings['github_branch']); ?>">
+                        <p class="description"><?php esc_html_e('Used only as a fallback when a release package is not available.', 'woo-fulfillment-export'); ?></p>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row"><label for="wfe-github-token"><?php esc_html_e('GitHub token', 'woo-fulfillment-export'); ?></label></th>
+                    <td>
+                        <input id="wfe-github-token" type="password" name="github_token" class="regular-text" value="<?php echo esc_attr($settings['github_token']); ?>" autocomplete="off">
+                        <p class="description"><?php esc_html_e('Optional. Needed only for private repositories or private release assets.', 'woo-fulfillment-export'); ?></p>
+                    </td>
+                </tr>
+>>>>>>> 33573ee (first commit)
             </table>
 
             <button class="button button-primary"><?php esc_html_e('Save settings', 'woo-fulfillment-export'); ?></button>

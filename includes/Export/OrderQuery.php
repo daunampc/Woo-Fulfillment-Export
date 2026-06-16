@@ -49,6 +49,29 @@ final class WFE_Order_Query
         ];
     }
 
+<<<<<<< HEAD
+=======
+
+    public static function fulfillment_status_options(): array
+    {
+        $all = function_exists('wc_get_order_statuses') ? wc_get_order_statuses() : [];
+        $options = [];
+
+        foreach (['wc-processing', 'wc-fulfillment'] as $key) {
+            $options[$key] = $all[$key] ?? ($key === 'wc-processing' ? __('Processing', 'woo-fulfillment-export') : __('Fulfillment', 'woo-fulfillment-export'));
+        }
+
+        return $options;
+    }
+
+    public static function fulfillment_status_slugs(): array
+    {
+        return array_map(static function ($key) {
+            return str_replace('wc-', '', (string) $key);
+        }, array_keys(self::fulfillment_status_options()));
+    }
+
+>>>>>>> 33573ee (first commit)
     public static function sanitize_statuses(array $statuses): array
     {
         $clean = [];
@@ -77,6 +100,20 @@ final class WFE_Order_Query
         $orders = [];
         $scanned = 0;
         $truncated = false;
+<<<<<<< HEAD
+=======
+        $direct_order = $this->direct_order_from_query((string) ($filters['order_query'] ?? ''));
+
+        if ($direct_order instanceof WC_Order && WFE_Product_Helper::order_matches_status_date($direct_order, $filters) && WFE_Product_Helper::order_matches_filters($direct_order, $filters)) {
+            $orders[] = $direct_order;
+            if (count($orders) >= $limit) {
+                return [
+                    'orders' => $orders,
+                    'truncated' => false,
+                ];
+            }
+        }
+>>>>>>> 33573ee (first commit)
 
         do {
             $args = [
@@ -98,6 +135,13 @@ final class WFE_Order_Query
                 }
 
                 $scanned++;
+<<<<<<< HEAD
+=======
+                if ($direct_order instanceof WC_Order && $order->get_id() === $direct_order->get_id()) {
+                    continue;
+                }
+
+>>>>>>> 33573ee (first commit)
                 if (WFE_Product_Helper::order_matches_filters($order, $filters)) {
                     $orders[] = $order;
                     if (count($orders) >= $limit) {
@@ -124,7 +168,11 @@ final class WFE_Order_Query
 
     private function requires_php_filtering(array $filters): bool
     {
+<<<<<<< HEAD
         foreach (['customer', 'product', 'sku', 'category'] as $key) {
+=======
+        foreach (['order_query', 'customer', 'product', 'sku', 'category'] as $key) {
+>>>>>>> 33573ee (first commit)
             if (trim((string) ($filters[$key] ?? '')) !== '') {
                 return true;
             }
@@ -137,10 +185,20 @@ final class WFE_Order_Query
     {
         $statuses = self::sanitize_statuses($statuses);
         if (!$statuses) {
+<<<<<<< HEAD
             $statuses = WFE_Settings::get('default_statuses', ['processing']);
         }
 
         return $statuses;
+=======
+            $statuses = WFE_Settings::get('default_statuses', self::fulfillment_status_slugs());
+        }
+
+        $allowed = self::fulfillment_status_slugs();
+        $statuses = array_values(array_intersect($statuses, $allowed));
+
+        return $statuses ?: $allowed;
+>>>>>>> 33573ee (first commit)
     }
 
     private function apply_date_filters(array $args, array $filters): array
@@ -161,4 +219,18 @@ final class WFE_Order_Query
 
         return $args;
     }
+<<<<<<< HEAD
+=======
+
+    private function direct_order_from_query(string $query): ?WC_Order
+    {
+        $query = trim(ltrim($query, '#'));
+        if ($query === '' || !ctype_digit($query)) {
+            return null;
+        }
+
+        $order = wc_get_order((int) $query);
+        return $order instanceof WC_Order ? $order : null;
+    }
+>>>>>>> 33573ee (first commit)
 }

@@ -176,6 +176,38 @@ uksort($mapping_columns, static function ($a, $b) {
                                 <button type="button" class="button" id="wfe-insert-wcpa"><?php esc_html_e('Insert WCPA', 'woo-fulfillment-export'); ?></button>
                             </div>
                         <?php endif; ?>
+<<<<<<< HEAD
+=======
+                        <?php if (strpos((string) $group, 'API Dynamic') !== false): ?>
+                            <p class="description wfe-help-text"><?php esc_html_e('This calls the configured API using the resolved query value and returns the configured response path, e.g. data.0.URL.', 'woo-fulfillment-export'); ?></p>
+                            <?php foreach ((array) ($api_connections ?? []) as $connection): ?>
+                                <?php if (empty($connection['enabled'])) { continue; } ?>
+                                <div class="wfe-api-builder">
+                                    <div>
+                                        <strong><?php echo esc_html($connection['name']); ?></strong>
+                                        <code><?php echo esc_html($connection['key']); ?></code>
+                                        <span><?php echo esc_html($connection['response_path']); ?></span>
+                                    </div>
+                                    <label>
+                                        <span><?php esc_html_e('Query value', 'woo-fulfillment-export'); ?></span>
+                                        <select class="wfe-api-query-select">
+                                            <option value="{product_sku}"><?php esc_html_e('Product SKU', 'woo-fulfillment-export'); ?></option>
+                                            <option value="{order_number}"><?php esc_html_e('Order Number', 'woo-fulfillment-export'); ?></option>
+                                            <option value="{product_name}"><?php esc_html_e('Product Name', 'woo-fulfillment-export'); ?></option>
+                                            <option value="__wcpa__"><?php esc_html_e('WCPA label', 'woo-fulfillment-export'); ?></option>
+                                            <option value="__custom__"><?php esc_html_e('Custom text', 'woo-fulfillment-export'); ?></option>
+                                        </select>
+                                    </label>
+                                    <input class="wfe-api-custom-query" type="text" placeholder="<?php echo esc_attr__('Size or custom query', 'woo-fulfillment-export'); ?>">
+                                    <button type="button" class="button wfe-insert-api" data-connection="<?php echo esc_attr($connection['key']); ?>"><?php esc_html_e('Insert API placeholder', 'woo-fulfillment-export'); ?></button>
+                                    <code><?php echo esc_html('{api:' . $connection['key'] . ':{product_sku}}'); ?></code>
+                                </div>
+                            <?php endforeach; ?>
+                            <?php if (empty($api_connections)): ?>
+                                <p><a href="<?php echo esc_url(admin_url('admin.php?page=wfe-api-connections')); ?>"><?php esc_html_e('Create an API connection first.', 'woo-fulfillment-export'); ?></a></p>
+                            <?php endif; ?>
+                        <?php endif; ?>
+>>>>>>> 33573ee (first commit)
                         <div class="wfe-chip-list">
                             <?php foreach ($placeholders as $placeholder): ?>
                                 <button type="button" class="button wfe-placeholder-chip" data-placeholder="<?php echo esc_attr($placeholder); ?>"><?php echo esc_html($placeholder); ?></button>
@@ -265,5 +297,31 @@ uksort($mapping_columns, static function ($a, $b) {
             insertPlaceholder('{wcpa:' + field + '}');
         });
     }
+<<<<<<< HEAD
+=======
+    document.querySelectorAll('.wfe-insert-api').forEach(function(button) {
+        button.addEventListener('click', function() {
+            const box = button.closest('.wfe-api-builder');
+            const select = box ? box.querySelector('.wfe-api-query-select') : null;
+            const custom = box ? box.querySelector('.wfe-api-custom-query') : null;
+            let query = select ? select.value : '{product_sku}';
+            const customValue = custom ? custom.value.trim() : '';
+            if (query === '__wcpa__') {
+                if (!customValue) {
+                    custom.focus();
+                    return;
+                }
+                query = '{wcpa:' + customValue + '}';
+            } else if (query === '__custom__') {
+                if (!customValue) {
+                    custom.focus();
+                    return;
+                }
+                query = customValue;
+            }
+            insertPlaceholder('{api:' + button.getAttribute('data-connection') + ':' + query + '}');
+        });
+    });
+>>>>>>> 33573ee (first commit)
 })();
 </script>

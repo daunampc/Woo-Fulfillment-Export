@@ -6,6 +6,11 @@ final class WFE_Placeholder_Resolver
 {
     public static function resolve(string $template, array $data): string
     {
+<<<<<<< HEAD
+=======
+        $template = WFE_Dynamic_Api_Resolver::resolve_placeholders($template, $data);
+
+>>>>>>> 33573ee (first commit)
         return preg_replace_callback('/\{([^}]+)\}/', static function ($matches) use ($data) {
             $key = trim((string) $matches[1]);
             foreach (self::key_variants($key) as $variant) {
@@ -94,6 +99,14 @@ final class WFE_Placeholder_Resolver
                 '{order_meta:meta_key}',
                 '{item_meta:meta_key}',
             ],
+<<<<<<< HEAD
+=======
+            __('API Dynamic Fields', 'woo-fulfillment-export') => [
+                '{api:vtn_tasksave_url:{product_sku}}',
+                '{api:vtn_tasksave_url:{order_number}}',
+                '{api:vtn_tasksave_url:{wcpa:Size}}',
+            ],
+>>>>>>> 33573ee (first commit)
         ];
     }
 

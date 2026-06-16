@@ -6,11 +6,34 @@ final class WFE_Csv_Template_Exporter
 {
     public function download(array $template, array $mapping, array $rows): void
     {
+<<<<<<< HEAD
+=======
+        $tmp = wp_tempnam('wfe-export.csv');
+        if (!$tmp) {
+            wp_die(esc_html__('Could not prepare CSV export file.', 'woo-fulfillment-export'));
+        }
+
+        $this->save_file($template, $mapping, $rows, $tmp);
+
+        $filename = sanitize_file_name('fulfillment-orders-' . current_time('Y-m-d-His') . '.csv');
+        nocache_headers();
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        header('Content-Length: ' . filesize($tmp));
+        readfile($tmp);
+        @unlink($tmp);
+        exit;
+    }
+
+    public function save_file(array $template, array $mapping, array $rows, string $target): void
+    {
+>>>>>>> 33573ee (first commit)
         $columns = WFE_Mapping_Repository::export_columns($template, $mapping);
         if (!$columns) {
             wp_die(esc_html__('No mapped columns found for CSV export.', 'woo-fulfillment-export'));
         }
 
+<<<<<<< HEAD
         $filename = sanitize_file_name('fulfillment-orders-' . current_time('Y-m-d-His') . '.csv');
 
         nocache_headers();
@@ -18,6 +41,9 @@ final class WFE_Csv_Template_Exporter
         header('Content-Disposition: attachment; filename="' . $filename . '"');
 
         $output = fopen('php://output', 'w');
+=======
+        $output = fopen($target, 'w');
+>>>>>>> 33573ee (first commit)
         if (!$output) {
             wp_die(esc_html__('Could not open CSV output stream.', 'woo-fulfillment-export'));
         }
@@ -34,6 +60,9 @@ final class WFE_Csv_Template_Exporter
         }
 
         fclose($output);
+<<<<<<< HEAD
         exit;
+=======
+>>>>>>> 33573ee (first commit)
     }
 }

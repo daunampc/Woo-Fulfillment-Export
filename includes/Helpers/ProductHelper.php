@@ -106,6 +106,14 @@ final class WFE_Product_Helper
 
     public static function order_matches_filters(WC_Order $order, array $filters): bool
     {
+<<<<<<< HEAD
+=======
+        $order_query = trim((string) ($filters['order_query'] ?? ''));
+        if ($order_query !== '' && !self::order_matches_order_query($order, $order_query)) {
+            return false;
+        }
+
+>>>>>>> 33573ee (first commit)
         $customer = trim((string) ($filters['customer'] ?? ''));
         if ($customer !== '' && !self::order_matches_customer($order, $customer)) {
             return false;
@@ -128,6 +136,50 @@ final class WFE_Product_Helper
         return false;
     }
 
+<<<<<<< HEAD
+=======
+    public static function order_matches_order_query(WC_Order $order, string $query): bool
+    {
+        $query = trim(ltrim($query, '#'));
+        if ($query === '') {
+            return true;
+        }
+
+        $haystack = strtolower(implode(' ', array_filter([
+            (string) $order->get_id(),
+            (string) $order->get_order_number(),
+        ])));
+
+        return strpos($haystack, strtolower($query)) !== false;
+    }
+
+    public static function order_matches_status_date(WC_Order $order, array $filters): bool
+    {
+        $statuses = WFE_Order_Query::sanitize_statuses((array) ($filters['status'] ?? []));
+        if ($statuses && !in_array($order->get_status(), $statuses, true)) {
+            return false;
+        }
+
+        $created = $order->get_date_created();
+        if (!$created) {
+            return true;
+        }
+
+        $date = $created->date_i18n('Y-m-d');
+        $from = sanitize_text_field((string) ($filters['date_from'] ?? ''));
+        $to = sanitize_text_field((string) ($filters['date_to'] ?? ''));
+
+        if ($from !== '' && $date < $from) {
+            return false;
+        }
+        if ($to !== '' && $date > $to) {
+            return false;
+        }
+
+        return true;
+    }
+
+>>>>>>> 33573ee (first commit)
     public static function item_sku(WC_Order_Item_Product $item): string
     {
         $product = $item->get_product();
